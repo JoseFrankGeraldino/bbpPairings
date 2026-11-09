@@ -771,7 +771,9 @@ namespace swisssystems
 
       // Choose the player to receive the bye, and add the bye to result. Do not
       // include the bye player in the vector of vertices.
-      std::vector<const tournament::Player *>::iterator byeIterator;
+      // The position of the bye player in sortedPlayers. An iterator would be
+      // invalidated by the erase below.
+      std::vector<const tournament::Player *>::difference_type byePosition{ };
       const tournament::Player *bye{ };
       if (sortedPlayers.size() & 1u)
       {
@@ -797,8 +799,7 @@ namespace swisssystems
         }
         result.emplace_back((*playerIterator)->id, (*playerIterator)->id);
         bye = *playerIterator;
-        byeIterator = playerIterator;
-        ++byeIterator;
+        byePosition = playerIterator - sortedPlayers.begin();
         sortedPlayers.erase(playerIterator);
       }
       /**
@@ -811,8 +812,7 @@ namespace swisssystems
 
       if (bye)
       {
-        sortedPlayers.insert(byeIterator, bye);
-        --byeIterator;
+        sortedPlayers.insert(sortedPlayers.begin() + byePosition, bye);
       }
 
       matching_computer matchingComputer(vertexLabels.size(), maxEdgeWeight);
