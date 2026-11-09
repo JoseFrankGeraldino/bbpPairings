@@ -51,7 +51,7 @@ namespace swisssystems
       const std::deque<std::string> specialtyHeaders,
       const tournament::Tournament &tournament)
     {
-      if (tournament.playedRounds >= std::string::npos)
+      if (std::cmp_greater_equal(tournament.playedRounds, std::string::npos))
       {
         throw std::length_error("");
       }
